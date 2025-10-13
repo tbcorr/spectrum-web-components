@@ -45,6 +45,9 @@ export class IconBase extends SpectrumElement {
     @property({ reflect: true })
     public size?: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl';
 
+    @property({ reflect: true, type: Boolean })
+    public mirrorRTL = false;
+
     public override connectedCallback(): void {
         super.connectedCallback();
     }

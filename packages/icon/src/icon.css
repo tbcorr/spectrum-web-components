@@ -36,3 +36,9 @@ svg,
 :host(:not(:root)) {
     overflow: hidden;
 }
+
+:host([dir="rtl"][mirror-rtl]) img,
+:host([dir="rtl"][mirror-rtl]) svg,
+:host([dir="rtl"][mirror-rtl]) ::slotted(*) {
+    transform: scale(-1, 1);
+}
