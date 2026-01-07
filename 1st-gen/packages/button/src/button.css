@@ -102,3 +102,204 @@ sp-progress-circle {
     border-color: var(--highcontrast-button-border-color-default, var(--mod-button-border-color-default, var(--spectrum-button-border-color-default)));
     color: var(--highcontrast-button-content-color-default, var(--mod-button-content-color-default, var(--spectrum-button-content-color-default)));
 }
+
+:host([variant="aether"]) {
+    --mod-button-min-width: 48px;
+    --mod-button-block-size: 32px;
+
+    position: relative;
+    background: transparent;
+    border-color: transparent;
+    border-radius: 99999px;
+}
+
+/* Disable default hover styles for aether */
+@media (hover: hover) {
+    :host([variant="aether"]):hover {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: none;
+    }
+}
+
+/* Disable focus ring and focus styles for aether */
+:host([variant="aether"]):focus-visible,
+:host([variant="aether"][focused]) {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    outline: none;
+}
+
+:host([variant="aether"]):focus-visible:after,
+:host([variant="aether"][focused]):after {
+    box-shadow: none;
+}
+
+/* Disable active/down styles for aether */
+:host([variant="aether"]):active,
+:host([variant="aether"][active]) {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+/* Icon-only circular button */
+:host([variant="aether"]) slot[name="icon"][icon-only] {
+    --mod-button-min-width: 40px;
+    --mod-button-block-size: 40px;
+}
+
+:host([variant="aether"]) .aether {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 99999px;
+    backdrop-filter: blur(4px);
+}
+
+:host([variant="aether"]) .aether-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    overflow: hidden;
+    border-radius: 99999px;
+
+
+    /* Subtle rainbow/prismatic shadow */
+    box-shadow:
+        0 2px 4px rgb(255 0 150 / 8%),
+        0 4px 8px rgb(150 0 255 / 8%),
+        0 6px 12px rgb(0 150 255 / 8%),
+        0 8px 16px rgb(0 255 150 / 8%);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+}
+
+/* :host([variant="aether"]) .aether-blur {
+    position: absolute;
+    z-index: 0;
+    border-radius: 99999px;
+    backdrop-filter: blur(2px);
+    overflow: hidden;
+} */
+
+:host([variant="aether"]) .aether-gradient {
+    z-index: 1;
+    position: absolute;
+    inset: 0;
+    border-radius: 99999px;
+    background: linear-gradient(135deg, rgb(255 88 249 / 15%) 0%, rgb(255 255 180 / 30%) 100%);
+}
+
+:host([variant="aether"]) .aether-reflection {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 99999px;
+
+    /* Base reflective border - always visible */
+    box-shadow: inset 1px 1px 2px 0 rgb(255 255 249 / 25%),
+        inset 0 0 2px 1px rgb(255 255 249 / 40%);
+}
+
+/* Dynamic arc highlight as a separate pseudo-element */
+:host([variant="aether"]) .aether-reflection::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 99999px;
+
+    /* Thin arc highlight using conic gradient */
+    background: conic-gradient(
+        from calc(var(--hotspot-angle, 0deg) - 15deg) at 50% 50%,
+        transparent 0deg,
+        rgb(255 255 255 / calc(var(--hotspot-opacity, 0) * 0.9)) 15deg,
+        rgb(255 255 255 / calc(var(--hotspot-opacity, 0) * 0.5)) 20deg,
+        transparent 30deg
+    );
+
+    /* Mask to constrain to edge only - very thin ring */
+    mask: radial-gradient(
+        circle at 50% 50%,
+        transparent calc(75% - 2px),
+        black calc(75% - 1.5px),
+        black calc(75% - 0.5px),
+        transparent 50%
+    );
+    -webkit-mask: radial-gradient(
+        circle at 50% 50%,
+        transparent calc(75% - 2px),
+        black calc(75% - 1.5px),
+        black calc(75% - 0.5px),
+        transparent 50%
+    );
+
+    transition: opacity 0.3s ease-out;
+    pointer-events: none;
+}
+
+:host([variant="aether"]) slot[name="icon"]::slotted(*) {
+    inline-size: 20px;
+    block-size: 20px;
+}
+
+:host([variant="aether"]) .button {
+    appearance: none;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    background-color: transparent;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 99999px;
+    min-inline-size: var(--mod-button-min-width, 48px);
+    min-block-size: var(--mod-button-block-size, 32px);
+    inline-size: auto;
+    block-size: auto;
+    z-index: 3;
+}
+
+/* Make icon-only buttons perfectly circular */
+:host([variant="aether"]) slot[name="icon"][icon-only] ~ .button,
+:host([variant="aether"]) .button:has(slot[name="icon"][icon-only]) {
+    aspect-ratio: 1;
+    padding: 10px;
+    min-inline-size: 40px;
+    min-block-size: 40px;
+    inline-size: 40px;
+    block-size: 40px;
+}
+
+:host([variant="aether"]) .label,
+:host([variant="aether"]) slot[name="icon"]::slotted(*) {
+    z-index: 4;
+}
+
+:host([variant="aether"]:hover) .aether-wrapper {
+    /* Enhanced rainbow shadow on hover */
+    box-shadow:
+        0 4px 8px rgb(255 0 150 / 12%),
+        0 6px 12px rgb(150 0 255 / 12%),
+        0 8px 16px rgb(0 150 255 / 12%),
+        0 10px 20px rgb(0 255 150 / 12%);
+}
+
+:host([variant="aether"]:active) .aether-wrapper {
+    /* Subtle rainbow shadow on active */
+    box-shadow:
+        0 1px 2px rgb(255 0 150 / 10%),
+        0 2px 4px rgb(150 0 255 / 10%),
+        0 3px 6px rgb(0 150 255 / 10%),
+        0 4px 8px rgb(0 255 150 / 10%);
+    transform: translateY(0);
+}
+
+:host([variant="aether"][disabled]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
