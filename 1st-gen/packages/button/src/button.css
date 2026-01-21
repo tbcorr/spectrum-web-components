@@ -103,6 +103,7 @@ sp-progress-circle {
     color: var(--highcontrast-button-content-color-default, var(--mod-button-content-color-default, var(--spectrum-button-content-color-default)));
 }
 
+/* Aether button styles */
 :host([variant="aether"]) {
     --mod-button-min-width: 48px;
     --mod-button-block-size: 32px;
@@ -167,7 +168,6 @@ sp-progress-circle {
     overflow: hidden;
     border-radius: 99999px;
 
-
     /* Subtle rainbow/prismatic shadow */
     box-shadow:
         0 2px 4px rgb(255 0 150 / 8%),
@@ -201,7 +201,8 @@ sp-progress-circle {
     border-radius: 99999px;
 
     /* Base reflective border - always visible */
-    box-shadow: inset 1px 1px 2px 0 rgb(255 255 249 / 25%),
+    box-shadow:
+        inset 1px 1px 2px 0 rgb(255 255 249 / 25%),
         inset 0 0 2px 1px rgb(255 255 249 / 40%);
 }
 
@@ -213,22 +214,10 @@ sp-progress-circle {
     border-radius: 99999px;
 
     /* Thin arc highlight using conic gradient */
-    background: conic-gradient(
-        from calc(var(--hotspot-angle, 0deg) - 15deg) at 50% 50%,
-        transparent 0deg,
-        rgb(255 255 255 / calc(var(--hotspot-opacity, 0) * 0.9)) 15deg,
-        rgb(255 255 255 / calc(var(--hotspot-opacity, 0) * 0.5)) 20deg,
-        transparent 30deg
-    );
+    background: conic-gradient(from calc(var(--hotspot-angle, 0deg) - 15deg) at 50% 50%, transparent 0deg, rgb(255 255 255 / calc(var(--hotspot-opacity, 0) * 0.9)) 15deg, rgb(255 255 255 / calc(var(--hotspot-opacity, 0) * 0.5)) 20deg, transparent 30deg);
 
     /* Mask to constrain to edge only - very thin ring */
-    mask: radial-gradient(
-        circle at 50% 50%,
-        transparent calc(75% - 2px),
-        black calc(75% - 1.5px),
-        black calc(75% - 0.5px),
-        transparent 50%
-    );
+    mask: radial-gradient(circle at 50% 50%, transparent calc(75% - 2px), black calc(75% - 1.5px), black calc(75% - 0.5px), transparent 50%);
     transition: opacity 0.3s ease-out;
     pointer-events: none;
 }
@@ -294,4 +283,3 @@ sp-progress-circle {
     opacity: 0.5;
     cursor: not-allowed;
 }
-
