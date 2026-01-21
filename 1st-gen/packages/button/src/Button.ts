@@ -241,7 +241,6 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
         return this.treatment === 'outline';
     }
 
-
     protected override renderButton(): TemplateResult {
         if (this.variant === 'aether') {
             return html`
@@ -251,9 +250,14 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
                         <div class="aether-gradient"></div>
                         <div class="aether-reflection"></div>
                         <div class="button">
-                            <slot name="icon" ?icon-only=${!this.hasLabel}></slot>
+                            <slot
+                                name="icon"
+                                ?icon-only=${!this.hasLabel}
+                            ></slot>
                             <span class="label">
-                                <slot @slotchange=${this.manageTextObservedSlot}></slot>
+                                <slot
+                                    @slotchange=${this.manageTextObservedSlot}
+                                ></slot>
                             </span>
                         </div>
                     </div>
@@ -266,7 +270,7 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
         `;
     }
 
-    private handleAetherClick = (e: MouseEvent): void => {
+    private handleAetherClick = (click: MouseEvent): void => {
         // Only create particles if not disabled and particles are enabled
         if (
             this.disabled ||
@@ -278,7 +282,7 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
 
         // Create 15 particles on click (reduced for tighter effect)
         for (let i = 0; i < 15; i++) {
-            this.createParticle(e.clientX, e.clientY);
+            this.createParticle(click.clientX, click.clientY);
         }
     };
 
@@ -312,10 +316,6 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
         const dy = y - centerY;
         const clickAngle = Math.atan2(dy, dx);
 
-        // Start position: project click to the edge
-        const startX = centerX + Math.cos(clickAngle) * radius;
-        const startY = centerY + Math.sin(clickAngle) * radius;
-
         // Travel along the arc - alternating clockwise/counter-clockwise
         // Each particle travels 60-120 degrees
         const arcDistance = (Math.random() * 60 + 60) * (Math.PI / 180);
@@ -327,10 +327,11 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
 
         for (let i = 0; i <= steps; i++) {
             const progress = i / steps;
-            const currentAngle = clickAngle + (arcDistance * direction * progress);
+            const currentAngle =
+                clickAngle + arcDistance * direction * progress;
             const posX = centerX + Math.cos(currentAngle) * radius;
             const posY = centerY + Math.sin(currentAngle) * radius;
-            
+
             keyframes.push({
                 transform: `translate(${posX - size / 2}px, ${posY - size / 2}px)`,
                 opacity: 0.16 * (1 - progress), // Fade from 16% to 0
@@ -372,7 +373,7 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
         }
     }
 
-    private handleReflectionMouseMove = (e: MouseEvent): void => {
+    private handleReflectionMouseMove = (mouseMove: MouseEvent): void => {
         if (!this.reflectionElement) return;
 
         const rect = this.getBoundingClientRect();
@@ -381,8 +382,8 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
         const radius = rect.width / 2;
 
         // Calculate distance from center
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
+        const mouseX = mouseMove.clientX;
+        const mouseY = mouseMove.clientY;
         const dx = mouseX - centerX;
         const dy = mouseY - centerY;
         const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
@@ -411,12 +412,13 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
     };
 
     private startHotspotAnimation(): void {
-        const animate = () => {
+        const animate = (): void => {
             if (!this.reflectionElement) return;
 
             // Only update if there's meaningful change (opacity > 0.01 or still animating)
-            const hasOpacity = this.currentOpacity > 0.01 || this.targetOpacity > 0;
-            
+            const hasOpacity =
+                this.currentOpacity > 0.01 || this.targetOpacity > 0;
+
             if (!hasOpacity) {
                 // Mouse is far away and animation is done - stop updating
                 this.animationFrameId = requestAnimationFrame(animate);

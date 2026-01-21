@@ -206,7 +206,7 @@ sp-progress-circle {
 }
 
 /* Dynamic arc highlight as a separate pseudo-element */
-:host([variant="aether"]) .aether-reflection::before {
+:host([variant="aether"]) .aether-reflection:before {
     content: "";
     position: absolute;
     inset: 0;
@@ -229,14 +229,6 @@ sp-progress-circle {
         black calc(75% - 0.5px),
         transparent 50%
     );
-    -webkit-mask: radial-gradient(
-        circle at 50% 50%,
-        transparent calc(75% - 2px),
-        black calc(75% - 1.5px),
-        black calc(75% - 0.5px),
-        transparent 50%
-    );
-
     transition: opacity 0.3s ease-out;
     pointer-events: none;
 }

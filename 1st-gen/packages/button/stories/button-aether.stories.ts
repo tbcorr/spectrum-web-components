@@ -33,7 +33,9 @@ export const medium = (args: Properties): TemplateResult =>
     renderButton({
         ...args,
         iconOnly: true,
-        content: html`<sp-icon-add slot="icon"></sp-icon-add>`
+        content: html`
+            <sp-icon-add slot="icon"></sp-icon-add>
+        `,
     });
 medium.args = {
     size: 'm',
