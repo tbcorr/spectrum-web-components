@@ -275,6 +275,7 @@ export class Button extends SizedMixin(ButtonBase, { noDefaultSize: true }) {
         if (
             this.disabled ||
             !this.aetherParticles ||
+            this.variant !== 'aether' ||
             !('animate' in Element.prototype)
         ) {
             return;

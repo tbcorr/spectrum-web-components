@@ -51,27 +51,21 @@ describe('Button', () => {
 
             const aetherWrapper =
                 el.shadowRoot?.querySelector('.aether-wrapper');
-            expect(
-                aetherWrapper,
-                'aether wrapper element present'
-            ).to.not.be.null;
+            expect(aetherWrapper, 'aether wrapper element present').to.not.be
+                .null;
 
             const aetherBlur = el.shadowRoot?.querySelector('.aether-blur');
             expect(aetherBlur, 'aether blur element present').to.not.be.null;
 
             const aetherGradient =
                 el.shadowRoot?.querySelector('.aether-gradient');
-            expect(
-                aetherGradient,
-                'aether gradient element present'
-            ).to.not.be.null;
+            expect(aetherGradient, 'aether gradient element present').to.not.be
+                .null;
 
             const aetherReflection =
                 el.shadowRoot?.querySelector('.aether-reflection');
-            expect(
-                aetherReflection,
-                'aether reflection element present'
-            ).to.not.be.null;
+            expect(aetherReflection, 'aether reflection element present').to.not
+                .be.null;
         });
 
         it('does not render aether structure for other variants', async () => {
@@ -83,10 +77,8 @@ describe('Button', () => {
 
             const aetherWrapper =
                 el.shadowRoot?.querySelector('.aether-wrapper');
-            expect(
-                aetherWrapper,
-                'aether-specific elements not present'
-            ).to.be.null;
+            expect(aetherWrapper, 'aether-specific elements not present').to.be
+                .null;
         });
 
         it('is accessible', async () => {
@@ -139,20 +131,14 @@ describe('Button', () => {
                             call.args[0] instanceof HTMLElement &&
                             call.args[0].classList.contains('aether-particle')
                     );
-                expect(
-                    particleCalls.length,
-                    'creates 15 particles'
-                ).to.equal(15);
+                expect(particleCalls.length, 'creates 15 particles').to.equal(
+                    15
+                );
             });
 
             it('does not create particles when aetherParticles is false', async () => {
                 const el = await fixture<Button>(html`
-                    <sp-button
-                        variant="aether"
-                        icon-only
-                        label="Test"
-                        ?aether-particles=${false}
-                    >
+                    <sp-button variant="aether" icon-only label="Test">
                         <svg slot="icon"></svg>
                     </sp-button>
                 `);
@@ -160,11 +146,38 @@ describe('Button', () => {
                 await elementUpdated(el);
                 await nextFrame();
 
+                // Verify default state
+                expect(el.aetherParticles, 'starts as true').to.be.true;
+
+                // Ensure no particles from setup
+                const particlesBeforeChange =
+                    document.body.querySelectorAll('.aether-particle');
+                particlesBeforeChange.forEach((p) => p.remove());
+
+                // Set aetherParticles to false programmatically
+                el.aetherParticles = false;
+                await el.updateComplete;
+                await elementUpdated(el);
+                await nextFrame();
+
+                // Verify property is actually false
+                expect(el.aetherParticles, 'now set to false').to.be.false;
+
+                // Ensure still no particles before click
+                const particlesBeforeClick =
+                    document.body.querySelectorAll('.aether-particle');
+                expect(
+                    particlesBeforeClick.length,
+                    'no particles before click'
+                ).to.equal(0);
+
                 appendChildSpy = spy(document.body, 'appendChild');
 
                 el.click();
                 await elementUpdated(el);
+                await nextFrame();
 
+                // Check both spy calls AND actual DOM
                 const particleCalls = appendChildSpy
                     .getCalls()
                     .filter(
@@ -172,10 +185,17 @@ describe('Button', () => {
                             call.args[0] instanceof HTMLElement &&
                             call.args[0].classList.contains('aether-particle')
                     );
+
+                const particlesInDOM =
+                    document.body.querySelectorAll('.aether-particle');
+
                 expect(
                     particleCalls.length,
-                    'no particles created when disabled'
+                    'no spy calls for particles'
                 ).to.equal(0);
+                expect(particlesInDOM.length, 'no particles in DOM').to.equal(
+                    0
+                );
             });
 
             it('does not create particles when button is disabled', async () => {
@@ -225,10 +245,9 @@ describe('Button', () => {
 
                 const particles =
                     document.body.querySelectorAll('.aether-particle');
-                expect(
-                    particles.length,
-                    'particles created on click'
-                ).to.equal(15);
+                expect(particles.length, 'particles created on click').to.equal(
+                    15
+                );
 
                 const firstParticle = particles[0] as HTMLElement;
                 const animation = firstParticle.getAnimations()[0];
@@ -259,10 +278,8 @@ describe('Button', () => {
                 const reflectionElement = el.shadowRoot?.querySelector(
                     '.aether-reflection'
                 ) as HTMLElement;
-                expect(
-                    reflectionElement,
-                    'reflection element exists'
-                ).to.not.be.null;
+                expect(reflectionElement, 'reflection element exists').to.not.be
+                    .null;
 
                 const rect = el.getBoundingClientRect();
                 const mouseMoveEvent = new MouseEvent('mousemove', {
@@ -351,9 +368,10 @@ describe('Button', () => {
                         '--hotspot-opacity'
                     ) || '0'
                 );
-                expect(opacity, 'hotspot fades when far away').to.be.lessThanOrEqual(
-                    0.01
-                );
+                expect(
+                    opacity,
+                    'hotspot fades when far away'
+                ).to.be.lessThanOrEqual(0.01);
             });
         });
 
