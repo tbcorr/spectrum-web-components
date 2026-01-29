@@ -10,17 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-export {
-    SpectrumElement,
-    SpectrumMixin,
-    type SpectrumInterface,
-} from './Base.js';
-export {
-    SizedMixin,
-    type ElementSize,
-    ElementSizes,
-    type DefaultElementSize,
-    type SizedElementInterface,
+export { SpectrumElement, SpectrumMixin } from './Base.js';
+export type { SpectrumInterface } from './Base.js';
+export { SizedMixin, ElementSizes } from './sizedMixin.js';
+export type {
+    SizedElementConstructor,
+    ElementSize,
+    DefaultElementSize,
+    SizedElementInterface,
 } from './sizedMixin.js';
 export { defineElement } from './define-element.js';
 export { version } from './version.js';
