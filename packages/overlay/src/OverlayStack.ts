@@ -34,7 +34,8 @@ class OverlayStack {
     bindEvents(): void {
         this.document.addEventListener('pointerdown', this.handlePointerdown);
         this.document.addEventListener('pointerup', this.handlePointerup);
-        this.document.addEventListener('keydown', this.handleKeydown);
+        window.addEventListener('keydown', this.handleKeydown);
+        window.addEventListener('blur', this.handleWindowBlur);
         this.document.addEventListener('scroll', this.handleScroll, {
             capture: true,
         });
@@ -153,6 +154,13 @@ class OverlayStack {
         if (event.code !== 'Escape') return;
         if (!this.stack.length) return;
         const last = this.stack[this.stack.length - 1];
+        if (last?.type === 'hint') {
+            // Hint overlays should close on "Escape" without triggering other listeners.
+            event.preventDefault();
+            event.stopPropagation();
+            this.closeOverlay(last);
+            return;
+        }
         if (last?.type === 'page') {
             event.preventDefault();
             return;
@@ -165,6 +173,13 @@ class OverlayStack {
         if (supportsPopover) return;
         if (!last) return;
         this.closeOverlay(last);
+    };
+
+    // Close all "hint" overlays when the window loses focus.
+    private handleWindowBlur = (): void => {
+        this.stack
+            .filter((overlay) => overlay.type === 'hint')
+            .forEach((overlay) => this.closeOverlay(overlay));
     };
 
     /**
@@ -188,6 +203,14 @@ class OverlayStack {
      * - 'hint': shouldn't close other overlays and give way to all other overlays on a trigger
      */
     add(overlay: Overlay): void {
+        // Don't open "hint" overlays when focus is inside a cross-origin iframe.
+        if (
+            overlay.type === 'hint' &&
+            this.document.activeElement instanceof HTMLIFrameElement
+        ) {
+            overlay.open = false;
+            return;
+        }
         if (this.stack.includes(overlay)) {
             const overlayIndex = this.stack.indexOf(overlay);
             if (overlayIndex > -1) {
